@@ -8,9 +8,8 @@ All codes are arranged accoding to the order of figures.
 
 _Please contact us if there are any questions._
 
-Correspondence:  
+Authors:
 Yamei NIU  
 [niuym@ibms.pumc.edu.cn](mailto:niuym@ibms.pumc.edu.cn)  
-Author:  
 Lin Yang  
 [yanglin@ibms.pumc.edu.cn](mailto:yanglin@ibms.pumc.edu.cn)
