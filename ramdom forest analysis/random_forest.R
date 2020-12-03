@@ -1,0 +1,20 @@
+load("basic_data.RData")
+surv_info <- clinical_info[substr(clinical_info$sampleID,14,15)=="01" & !clinical_info$PAM50Call_RNAseq %in% c("","Normal"),c("sampleID","days_to_death","PAM50Call_RNAseq","vital_status","days_to_last_followup")]
+surv_expr_info <- merge(surv_info,m6A_regulator_t,by.x = "sampleID",by.y = 0)
+library(randomForest)
+surv_expr_info$PAM50Call_RNAseq <- factor(surv_expr_info$PAM50Call_RNAseq)
+surv_expr_info$Basal_status <- ifelse(surv_expr_info$PAM50Call_RNAseq=="Basal",1,0)
+surv_expr_info$Basal_status <- factor(surv_expr_info$Basal_status,levels = c(0,1),labels = c("non_Basal","Basal"))
+RM_output_B <- randomForest(surv_expr_info[,c(6:33)],surv_expr_info$Basal_status,
+                            importance=TRUE,ntree=600, proximity=TRUE)
+summary(RM_output_B)
+plot(RM_output_B)
+pdf("varImpPlot.pdf",width = 8,height = 7)
+varImpPlot(RM_output_B, main = "variable importance")
+dev.off()
+library(varSelRF)
+randomImportances_B <- randomVarImpsRF(surv_expr_info[,c(6:33)],surv_expr_info$Basal_status,
+                                       forest = RM_output_B,numrandom = 20,usingCluster = FALSE)
+pdf("randomVarImpsRFplot.pdf",width = 8,height = 7)
+randomVarImpsRFplot(randomImportances_B,RM_output_B)
+dev.off()
